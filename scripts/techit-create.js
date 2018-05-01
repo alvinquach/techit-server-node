@@ -149,6 +149,102 @@ let ticket1 = new Ticket({
 });
 ticketList.push(ticket1);
 
+let ticket2 = new Ticket({
+    id : 2,
+    createdDate : '2018-02-14 00:00:00',
+    details : 'Some description',
+    lastUpdated : '2018-03-05 00:00:00',
+    location : 'E&T A309',
+    priority : 0,
+    startDate : '2018-03-02 00:00:00',
+    status : 1,
+    subject : 'Test Ticket 2',
+    createdById : 3,
+    unitId : 1
+});
+ticketList.push(ticket2);
+
+let ticket3 = new Ticket({
+    id : 3,
+    createdDate : '2018-02-14 00:00:00',
+    details : 'Some description',
+    location : 'Salazar Hall Entrance',
+    priority : 0,
+    status : 0,
+    subject : 'Test Ticket 3',
+    createdById : 3,
+    unitId : 2
+});
+ticketList.push(ticket3);
+
+let ticket4 = new Ticket({
+    id : 4,
+    completionDetails : 'This was completed after a few months.',
+    createdDate : '2017-06-14 00:00:00',
+    details : 'This ticket should be completed.',
+    endDate : '2018-04-05 00:00:00',
+    lastUpdated : '2018-04-02 00:00:00',
+    location : 'Library 4th Floor',
+    priority : 1,
+    startDate : '2018-01-02 00:00:00',
+    status : 3,
+    subject : 'Test Ticket 4',
+    createdById : 1,
+    unitId : 1
+});
+ticketList.push(ticket4);
+
+let ticket5 = new Ticket({
+    id : 5,
+    completionDetails : 'This was completed after a few months.',
+    createdDate : '2017-06-14 00:00:00',
+    details : 'This ticket should be completed.',
+    endDate : '2018-04-05 00:00:00',
+    lastUpdated : '2018-04-02 00:00:00',
+    location : 'Library 4th Floor',
+    priority : 1,
+    startDate : '2018-01-02 00:00:00',
+    status : 3,
+    subject : 'Test Ticket 5',
+    createdById : 2,
+    unitId : 1
+});
+ticketList.push(ticket5);
+
+let ticket6 = new Ticket({
+    id : 6,
+    completionDetails : 'This was completed after a few months.',
+    createdDate : '2017-06-14 00:00:00',
+    details : 'This ticket should be completed.',
+    endDate : '2018-04-05 00:00:00',
+    lastUpdated : '2018-04-02 00:00:00',
+    location : 'Library 4th Floor',
+    priority : 1,
+    startDate : '2018-01-02 00:00:00',
+    status : 3,
+    subject : 'Test Ticket 6',
+    createdById : 3,
+    unitId : 1
+});
+ticketList.push(ticket6);
+
+let ticket7 = new Ticket({
+    id : 7,
+    completionDetails : 'This was completed after a few months.',
+    createdDate : '2017-06-14 00:00:00',
+    details : 'This ticket should be completed.',
+    endDate : '2018-04-05 00:00:00',
+    lastUpdated : '2018-04-02 00:00:00',
+    location : 'Library 4th Floor',
+    priority : 1,
+    startDate : '2018-01-02 00:00:00',
+    status : 3,
+    subject : 'Test Ticket 7',
+    createdById : 4,
+    unitId : 1
+});
+ticketList.push(ticket7);
+
 // Using Promise
 async function run() {
     await mongoose.connect('mongodb://localhost/hw4');
