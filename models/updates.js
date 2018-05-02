@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 // Create a schema, a model, and a new object
 
 let updateSchema = mongoose.Schema({
-  id: Number,
   modifiedDate: Date,
   updateDetails: String,
   modifiedById: { type: mongoose.Schema.Types.Number, ref: 'User' },

@@ -5,11 +5,14 @@ const User = require('../models/users');
 const Unit = require('../models/units');
 const Ticket = require('../models/tickets');
 const Update = require('../models/updates');
+const tickets_xref_technicians = require('../models/tickets_xref_technicians');
+
 
 let unitList = [];
 let userList = [];
 let ticketList = [];
 let updateList = [];
+let ticketXrefTechList = [];
 
 let unit1 = new Unit({
     id: 1,
@@ -274,7 +277,29 @@ let update3 = new Update({
 });
 updateList.push(update3);
 
+let tickets_xref_technicians1 = new tickets_xref_technicians({
+    ticketId: 1,
+    updateDetechnicianId:2
+});
+ticketXrefTechList.push(tickets_xref_technicians1);
 
+let tickets_xref_technicians2 = new tickets_xref_technicians({
+    ticketId: 2,
+    updateDetechnicianId:2
+});
+ticketXrefTechList.push(tickets_xref_technicians2);
+
+let tickets_xref_technicians3 = new tickets_xref_technicians({
+    ticketId: 3,
+    updateDetechnicianId:3
+});
+ticketXrefTechList.push(tickets_xref_technicians3);
+
+let tickets_xref_technicians4 = new tickets_xref_technicians({
+    ticketId: 3,
+    updateDetechnicianId:4
+});
+ticketXrefTechList.push(tickets_xref_technicians4);
 
 
 
@@ -296,6 +321,10 @@ async function run() {
     
     await Update.remove()
     console.log('All updates removed');
+
+    await tickets_xref_technicians.remove()
+    console.log('All tickets_xref_technicians removed');
+
 
     console.log('\n');
 
@@ -327,6 +356,13 @@ async function run() {
         let savedUpdate = updateList[k];
         await savedUpdate.save()
         console.log(`New Update saved: ${savedUpdate.modifiedDate}`);
+    }
+    console.log('\n');
+
+    for(let k = 0; k < ticketXrefTechList.length; k++){
+        let savedticketXrefTech = ticketXrefTechList[k];
+        await savedticketXrefTech.save()
+        console.log(`New savedticketXrefTech saved: ${savedticketXrefTech.ticketId}`);
     }
 
     await mongoose.disconnect();
