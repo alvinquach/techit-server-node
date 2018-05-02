@@ -5,10 +5,14 @@ const User = require('../models/users');
 const Unit = require('../models/units');
 const Ticket = require('../models/tickets');
 const Update = require('../models/updates');
+const tickets_xref_technicians = require('../models/tickets_xref_technicians');
+
 
 let unitList = [];
 let userList = [];
 let ticketList = [];
+let updateList = [];
+let ticketXrefTechList = [];
 
 let unit1 = new Unit({
     id: 1,
@@ -248,6 +252,58 @@ let ticket7 = new Ticket({
 });
 ticketList.push(ticket7);
 
+let update1 = new Update({
+    modifiedDate : '2018-02-10', 
+    updateDetails: 'details of stuff',
+    modifiedById: 1,
+    ticketId: 1
+});
+updateList.push(update1);
+
+let update2 = new Update({
+    modifiedDate : '2018-11-23', 
+    updateDetails: 'stuff is in the details',
+    modifiedById: 2,
+    ticketId: 2
+});
+updateList.push(update2);
+
+
+let update3 = new Update({
+    modifiedDate : '2018-12-13', 
+    updateDetails: 'there are some detailed stuff',
+    modifiedById: 2,
+    ticketId: 1
+});
+updateList.push(update3);
+
+let tickets_xref_technicians1 = new tickets_xref_technicians({
+    ticketId: 1,
+    updateDetechnicianId:2
+});
+ticketXrefTechList.push(tickets_xref_technicians1);
+
+let tickets_xref_technicians2 = new tickets_xref_technicians({
+    ticketId: 2,
+    updateDetechnicianId:2
+});
+ticketXrefTechList.push(tickets_xref_technicians2);
+
+let tickets_xref_technicians3 = new tickets_xref_technicians({
+    ticketId: 3,
+    updateDetechnicianId:3
+});
+ticketXrefTechList.push(tickets_xref_technicians3);
+
+let tickets_xref_technicians4 = new tickets_xref_technicians({
+    ticketId: 3,
+    updateDetechnicianId:4
+});
+ticketXrefTechList.push(tickets_xref_technicians4);
+
+
+
+
 // Using Promise
 async function run() {
     await mongoose.connect(process.env.DBURL);
@@ -262,6 +318,13 @@ async function run() {
 
     await Ticket.remove()
     console.log('All tickets removed');
+    
+    await Update.remove()
+    console.log('All updates removed');
+
+    await tickets_xref_technicians.remove()
+    console.log('All tickets_xref_technicians removed');
+
 
     console.log('\n');
 
@@ -285,6 +348,21 @@ async function run() {
         let savedTicket = ticketList[k];
         await savedTicket.save()
         console.log(`New ticket saved: ${savedTicket.id}.`);
+    }
+
+    console.log('\n');
+
+    for(let k = 0; k < updateList.length; k++){
+        let savedUpdate = updateList[k];
+        await savedUpdate.save()
+        console.log(`New Update saved: ${savedUpdate.modifiedDate}`);
+    }
+    console.log('\n');
+
+    for(let k = 0; k < ticketXrefTechList.length; k++){
+        let savedticketXrefTech = ticketXrefTechList[k];
+        await savedticketXrefTech.save()
+        console.log(`New savedticketXrefTech saved: ${savedticketXrefTech.ticketId}`);
     }
 
     await mongoose.disconnect();
