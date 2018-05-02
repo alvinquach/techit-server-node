@@ -284,7 +284,7 @@ async function run() {
     await mongoose.connect(process.env.DBURL);
     mongoose.connection.on('connected', () => console.log(`Mongoose connected to ${process.env.DBURL}`));
     mongoose.connection.on('disconnected', () => console.log("Mongoose disconnected."));
-
+  
     await User.remove();
     console.log('All users removed.');
 
