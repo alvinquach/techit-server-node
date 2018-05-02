@@ -9,6 +9,7 @@ const Update = require('../models/updates');
 let unitList = [];
 let userList = [];
 let ticketList = [];
+let updateList = [];
 
 let unit1 = new Unit({
     id: 1,
@@ -248,6 +249,36 @@ let ticket7 = new Ticket({
 });
 ticketList.push(ticket7);
 
+let update1 = new Update({
+    modifiedDate : '2018-02-10', 
+    updateDetails: 'details of stuff',
+    modifiedById: 1,
+    ticketId: 1
+});
+updateList.push(update1);
+
+let update2 = new Update({
+    modifiedDate : '2018-11-23', 
+    updateDetails: 'stuff is in the details',
+    modifiedById: 2,
+    ticketId: 2
+});
+updateList.push(update2);
+
+
+let update3 = new Update({
+    modifiedDate : '2018-12-13', 
+    updateDetails: 'there are some detailed stuff',
+    modifiedById: 2,
+    ticketId: 1
+});
+updateList.push(update3);
+
+
+
+
+
+
 // Using Promise
 async function run() {
     await mongoose.connect(process.env.DBURL);
@@ -262,6 +293,9 @@ async function run() {
 
     await Ticket.remove()
     console.log('All tickets removed');
+    
+    await Update.remove()
+    console.log('All updates removed');
 
     console.log('\n');
 
@@ -285,6 +319,14 @@ async function run() {
         let savedTicket = ticketList[k];
         await savedTicket.save()
         console.log(`New ticket saved: ${savedTicket.id}.`);
+    }
+
+    console.log('\n');
+
+    for(let k = 0; k < updateList.length; k++){
+        let savedUpdate = updateList[k];
+        await savedUpdate.save()
+        console.log(`New Update saved: ${savedUpdate.modifiedDate}`);
     }
 
     await mongoose.disconnect();
