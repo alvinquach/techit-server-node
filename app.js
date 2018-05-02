@@ -1,3 +1,11 @@
+require('dotenv').config()
+
+const mongoose = require('mongoose');
+mongoose.connection.on('connected', () => console.log(`Mongoose connected to ${process.env.DBURL}`));
+mongoose.connection.on('disconnected', () => console.log("Mongoose disconnected."));
+mongoose.connect(process.env.DBURL);
+
+
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -16,5 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+app.listen(3000, () => console.log('Listening on port 3000'));
+
 
 module.exports = app;

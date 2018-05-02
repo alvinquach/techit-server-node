@@ -1,7 +1,10 @@
+require('dotenv').config({path: '/Users/mahdi/eclipse-workspace/techit-server-node/.env'});
 const mongoose = require('mongoose');
+
 const User = require('../models/users');
 const Unit = require('../models/units');
 const Ticket = require('../models/tickets');
+const Update = require('../models/updates');
 
 let unitList = [];
 let userList = [];
@@ -247,8 +250,10 @@ ticketList.push(ticket7);
 
 // Using Promise
 async function run() {
-    await mongoose.connect('mongodb://localhost/hw4');
-
+    await mongoose.connect(process.env.DBURL);
+    mongoose.connection.on('connected', () => console.log(`Mongoose connected to ${process.env.DBURL}`));
+    mongoose.connection.on('disconnected', () => console.log("Mongoose disconnected."));
+  
     await User.remove();
     console.log('All users removed.');
 

@@ -41,6 +41,7 @@ module.exports = User;
 //   enabled : 1
 // });
 
+
 // Attach connection event handlers
 
 mongoose.connection.on('connected', () => console.log('Mongoose for User connected.'));
@@ -60,4 +61,3 @@ mongoose.connection.on('disconnected', () => console.log("Mongoose for User disc
 // }
 
 // run();
-

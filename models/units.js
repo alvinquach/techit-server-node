@@ -18,9 +18,11 @@ module.exports = Unit;
 //     name: 'me'
 // });
 
+
 // Attach connection event handlers
 mongoose.connection.on('connected', () => console.log('Mongoose for Unit connected.'));
 mongoose.connection.on('disconnected', () => console.log("Mongoose for Unit disconnected."));
+
 
 // Using Promise
 // async function run() {
@@ -39,3 +41,4 @@ mongoose.connection.on('disconnected', () => console.log("Mongoose for Unit disc
 // }
 
 // run();
+
