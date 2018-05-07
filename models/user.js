@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
-<<<<<<< HEAD
+
 require('./unit');
-=======
+
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 
 //lconst unit = require('./units');
 
 // Create a schema, a model, and a new object
->>>>>>> yosep-dev-01
+
 
 let userSchema = new Schema({
   department: String,
@@ -61,7 +61,7 @@ userSchema.methods.comparePassword = function (passw, schema, cb) {
     });
   });
 
-};
+};        
 
 let User = mongoose.model('User', userSchema);
 module.exports = User;

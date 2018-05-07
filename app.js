@@ -32,7 +32,7 @@ app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/users', usersRouter);
 
-<<<<<<< HEAD
+
 // Handle error statuses
 app.use((err, req, res, next) => {
     if (err && err.status && err.message) {
@@ -42,7 +42,7 @@ app.use((err, req, res, next) => {
         });
     }
 });
-=======
+
 app.use(passport.initialize());
 app.use(express.static('public'));
 // app.use(express.static(path.join(__dirname, 'public')));
@@ -53,7 +53,7 @@ require('./config/passport')(passport);
 // app.listen(3000, () => console.log('Listening on port 3000'));
 
 
->>>>>>> yosep-dev-01
+
 
 app.get('/', function(req, res) {
     res.send('Hello! The API is at http://localhost:' + port + '/api');
