@@ -1,4 +1,4 @@
 module.exports = {
   'secret': 'ilikejavabetter',
-  'database': 'mongodb://localhost:27017/techit-server-node'
+  'database': 'mongodb://localhost:27017/techit-server99'
 };
