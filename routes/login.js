@@ -8,7 +8,7 @@ const sendUnauthorized = (res) => {
     res.status(401).send("Invalid username or password.");
 }
 
-router.post('/', function(req, res, next) {
+router.post('/', (req, res, next) => {
     const username = req.query.username;
     const password = req.query.password;
     if (!username || !password) {
