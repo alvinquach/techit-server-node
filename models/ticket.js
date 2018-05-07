@@ -11,13 +11,13 @@ const ticketSchema = mongoose.Schema({
     lastUpdated: Date,
     location: String,
     priority: {
-        type: Number,
-        enum : ['NOT ASSIGNED','LOW','MEDIUM','HIGH'] // 0,1,2,3
+        type: String,
+        enum: ['NOT_ASSIGNED','LOW','MEDIUM','HIGH'] // 0,1,2,3
     },
     startDate: Date,
     status: {
-        type: Number,
-        enum: ['OPEN','IN PROGRESS','ON HOLD','COMPLETED','CLOSED'] // 0,1,2,3,4
+        type: String,
+        enum: ['OPEN','IN_PROGRESS','ON_HOLD','COMPLETED','CLOSED'] // 0,1,2,3,4
     },
     subject: String,
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

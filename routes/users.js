@@ -1,10 +1,11 @@
 const User = require('../models/user');
 const Ticket = require('../models/ticket');
+const authentication = require('../authentication/authentication');
 const express = require('express');
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', authentication.authenticatePosition('SYS_ADMIN'), function(req, res, next) {
     User.find({}, "-hash")
         .populate('unit')
         .exec((err, users) => {
@@ -14,7 +15,11 @@ router.get('/', function(req, res, next) {
 
 /** Get user by ID. */
 router.get('/:userId', function(req, res, next) {
-    User.findOne({_id: req.params.userId}, "-hash")
+    
+    // Specific permissions were not implemented for this endpoint
+    // because this endpoint was not a requirement.
+
+    User.findOne({ _id: req.params.userId }, "-hash")
         .populate('unit')
         .exec((err, users) => {
             res.send(users);
@@ -23,7 +28,15 @@ router.get('/:userId', function(req, res, next) {
 
 /** Get tickets submitted by a user. */
 router.get('/:userId/tickets', function(req, res, next) {
-    Ticket.find({createdBy: req.params.userId})
+
+    const userId = req.params.userId;
+
+    // Regular users can only access tickets that they created.
+    if (req.user.position == 'USER' && req.user._id != userId) {
+        return res.status(403).send("You do not have access to this endpoint.");
+    }
+
+    Ticket.find({ createdBy: userId })
         .populate({
             path: 'createdBy',
             select: 'firstName lastName'
@@ -36,6 +49,7 @@ router.get('/:userId/tickets', function(req, res, next) {
         .exec((err, users) => {
             res.send(users);
         });
+
 });
 
 module.exports = router;
