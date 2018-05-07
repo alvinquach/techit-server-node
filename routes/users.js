@@ -14,6 +14,7 @@ router.get('/', function(req, res, next) {
 
 /** Get user by ID. */
 router.get('/:userId', function(req, res, next) {
+    console.log(req.user);
     User.findOne({_id: req.params.userId}, "-hash")
         .populate('unit')
         .exec((err, users) => {
