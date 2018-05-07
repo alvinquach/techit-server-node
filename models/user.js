@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-//lconst unit = require('./units');
-
-// Create a schema, a model, and a new object
+require('./unit');
 
 let userSchema = mongoose.Schema({
   department: String,

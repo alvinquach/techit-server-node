@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+require('./user');
+require('./unit');
+
 
 const ticketSchema = mongoose.Schema({
     completionDetails: String,
