@@ -21,8 +21,8 @@ router.get('/:userId', (req, res, next) => {
 
     User.findOne({ _id: req.params.userId }, "-hash")
         .populate('unit')
-        .exec((err, users) => {
-            res.send(users);
+        .exec((err, user) => {
+            res.send(user);
         });
 });
 
@@ -46,8 +46,8 @@ router.get('/:userId/tickets', (req, res, next) => {
             path: 'technicians',
             select: 'firstName lastName'
         })
-        .exec((err, users) => {
-            res.send(users);
+        .exec((err, tickets) => {
+            res.send(tickets);
         });
 
 });
