@@ -5,7 +5,7 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    User.find()
+    User.find({}, "-hash")
         .populate('unit')
         .exec((err, users) => {
             res.send(users);
@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
 
 /** Get user by ID. */
 router.get('/:userId', function(req, res, next) {
-    User.findOne({_id: req.params.userId})
+    User.findOne({_id: req.params.userId}, "-hash")
         .populate('unit')
         .exec((err, users) => {
             res.send(users);
