@@ -16,6 +16,8 @@ authentication.config(passport);
 const indexRouter = require('./routes/index');
 const loginRouter = require('./routes/login');
 const usersRouter = require('./routes/users');
+const unitsRouter = require('./routes/units');
+const ticketsRouter = require('./routes/tickets');
  
 const app = express();
 
@@ -29,5 +31,7 @@ app.use(passport.initialize());
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/users', authentication.authenticateToken(passport), usersRouter);
+app.use('/units', authentication.authenticateToken(passport), unitsRouter);
+app.use('/tickets', authentication.authenticateToken(passport), ticketsRouter);
  
 module.exports = app;
