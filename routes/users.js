@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/', authentication.authenticatePosition('SYS_ADMIN'), function(req, res, next) {
+router.get('/', authentication.authenticatePosition('SYS_ADMIN'), (req, res, next) => {
     User.find({}, "-hash")
         .populate('unit')
         .exec((err, users) => {
@@ -14,7 +14,7 @@ router.get('/', authentication.authenticatePosition('SYS_ADMIN'), function(req, 
 });
 
 /** Get user by ID. */
-router.get('/:userId', function(req, res, next) {
+router.get('/:userId', (req, res, next) => {
     
     // Specific permissions were not implemented for this endpoint
     // because this endpoint was not a requirement.
@@ -27,7 +27,7 @@ router.get('/:userId', function(req, res, next) {
 });
 
 /** Get tickets submitted by a user. */
-router.get('/:userId/tickets', function(req, res, next) {
+router.get('/:userId/tickets', (req, res, next) => {
 
     const userId = req.params.userId;
 
