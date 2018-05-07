@@ -30,8 +30,8 @@ const users = [
         lastName: 'Admin',
         email: 'admin@techit.com',
         phoneNumber: '696-969-6969',
-        position: 0,
-        enabled: 1
+        position: 'SYS_ADMIN',
+        enabled: true
     },
     {
         // id: 2,
@@ -44,8 +44,8 @@ const users = [
         lastName: 'Garcia',
         email: 'test@techit.com',
         phoneNumber: '323-224-5678',
-        position: 1,
-        enabled: 1
+        position: 'SUPERVISING_TECHNICIAN',
+        enabled: true
     },
     {
         // id: 3,
@@ -58,8 +58,8 @@ const users = [
         lastName: 'Sanchez',
         email: 'test@gmail.com',
         phoneNumber: '626-234-9999',
-        position: 2,
-        enabled: 1
+        position: 'TECHNICIAN',
+        enabled: true
     },
     {
         // id: 4,
@@ -72,8 +72,8 @@ const users = [
         lastName: 'piper',
         email: 'hello@gmail.com',
         phoneNumber: '562-234-9876',
-        position: 3,
-        enabled: 1
+        position: 'USER',
+        enabled: true
     },
     {
         // id: 5,
@@ -86,8 +86,8 @@ const users = [
         lastName: 'Shakibi',
         email: 'mshakibi@techit.com',
         phoneNumber: '626-417-3378',
-        position: 2,
-        enabled: 1
+        position: 'TECHNICIAN',
+        enabled: true
     },
     {
         // id: 6,
@@ -100,8 +100,8 @@ const users = [
         lastName: 'Sanchez',
         email: 'jcota@techit.com',
         phoneNumber: '333-333-3333',
-        position: 2,
-        enabled: 1
+        position: 'TECHNICIAN',
+        enabled: true
     },
     {
         // id: 7,
@@ -114,8 +114,8 @@ const users = [
         lastName: 'Doe',
         email: 'jdoe@techit.com',
         phoneNumber: '444-444-44449',
-        position: 3,
-        enabled: 1
+        position: 'USER',
+        enabled: true
     }
 ];
 
@@ -129,9 +129,9 @@ const tickets = [
         endDate: '2018-04-05 00:00:00',
         lastUpdated: '2018-04-02 00:00:00',
         location: 'Library 4th Floor',
-        priority: 1,
+        priority: 'LOW',
         startDate: '2018-01-02 00:00:00',
-        status: 3,
+        status: 'COMPLETED',
         subject: 'Test Ticket 1',
         createdBy: users[1]._id,
         unit: units[0]._id,
@@ -158,9 +158,9 @@ const tickets = [
         details: 'Some description',
         lastUpdated: '2018-03-05 00:00:00',
         location: 'E&T A309',
-        priority: 0,
+        priority: 'NOT_ASSIGNED',
         startDate: '2018-03-02 00:00:00',
-        status: 1,
+        status: 'IN_PROGRESS',
         subject: 'Test Ticket 2',
         createdBy: users[2]._id,
         unit: units[0]._id,
@@ -181,8 +181,8 @@ const tickets = [
         createdDate: '2018-02-14 00:00:00',
         details: 'Some description',
         location: 'Salazar Hall Entrance',
-        priority: 0,
-        status: 0,
+        priority: 'NOT_ASSIGNED',
+        status: 'OPEN',
         subject: 'Test Ticket 3',
         createdBy: users[2]._id,
         unit: units[1]._id,
@@ -201,9 +201,9 @@ const tickets = [
         endDate: '2018-04-05 00:00:00',
         lastUpdated: '2018-04-02 00:00:00',
         location: 'Library 4th Floor',
-        priority: 1,
+        priority: 'LOW',
         startDate: '2018-01-02 00:00:00',
-        status: 3,
+        status: 'COMPLETED',
         subject: 'Test Ticket 4',
         createdBy: users[0]._id,
         unit: units[0]._id,
@@ -219,9 +219,9 @@ const tickets = [
         endDate: '2018-04-05 00:00:00',
         lastUpdated: '2018-04-02 00:00:00',
         location: 'Library 4th Floor',
-        priority: 1,
+        priority: 'LOW',
         startDate: '2018-01-02 00:00:00',
-        status: 3,
+        status: 'COMPLETED',
         subject: 'Test Ticket 5',
         createdBy: users[1]._id,
         unit: units[0]._id,
@@ -237,9 +237,9 @@ const tickets = [
         endDate: '2018-04-05 00:00:00',
         lastUpdated: '2018-04-02 00:00:00',
         location: 'Library 4th Floor',
-        priority: 1,
+        priority: 'LOW',
         startDate: '2018-01-02 00:00:00',
-        status: 3,
+        status: 'COMPLETED',
         subject: 'Test Ticket 6',
         createdBy: users[2]._id,
         unit: units[0]._id,
@@ -255,9 +255,9 @@ const tickets = [
         endDate: '2018-04-05 00:00:00',
         lastUpdated: '2018-04-02 00:00:00',
         location: 'Library 4th Floor',
-        priority: 1,
+        priority: 'LOW',
         startDate: '2018-01-02 00:00:00',
-        status: 3,
+        status: 'COMPLETED',
         subject: 'Test Ticket 7',
         createdBy: users[3]._id,
         unit: units[0]._id,
