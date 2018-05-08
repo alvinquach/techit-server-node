@@ -19,7 +19,7 @@ router.get('/:userId', (req, res, next) => {
     // Specific permissions were not implemented for this endpoint
     // because this endpoint was not a requirement.
 
-    User.findOne({ _id: req.params.userId }, "-hash")
+    User.findById(req.params.userId, "-hash")
         .populate('unit')
         .exec((err, user) => {
             res.send(user);
