@@ -1,3 +1,6 @@
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const passportConfig = require('./passport');
 
 const sendForbidden = (res) => {
@@ -28,8 +31,28 @@ const authenticatePosition = (positions) => {
     }
 }
 
+const generateJwt = async (username, password) => {
+    if (username && password) {
+        const user = await User.findOne({username: username}).exec();
+        if (user) {
+            if (await bcrypt.compare(password, user.hash)) {
+                const payload = {
+                    id: user._id,
+                    username: user.username,
+                    position: user.position,
+                    unitId: user.unit
+                }
+                const token = jwt.sign(payload, process.env.JWT_SECRET, { algorithm: 'HS512' });
+                return "Bearer " + token;
+            }
+        }
+    }
+    return null;
+};
+
 module.exports = {
     config,
     authenticateToken,
-    authenticatePosition
+    authenticatePosition,
+    generateJwt
 };
