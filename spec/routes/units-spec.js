@@ -37,7 +37,7 @@ describe('Units API Tests:', () => {
             });
         });
 
-        it("Status 403 expected", (done) => {
+        it("Status 403 expected due to insufficient permissions", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {
@@ -84,7 +84,7 @@ describe('Units API Tests:', () => {
             });
         });
 
-        it("Status 403 expected", (done) => {
+        it("Status 403 expected due to insufficient permissions", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {
