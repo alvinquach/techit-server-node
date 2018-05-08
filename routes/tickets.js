@@ -23,11 +23,11 @@ router.post('/', (req, res, next) => {
         return res.status(400).send("Subject is required.");
     }
 
-    // Set priority and status if they are null or undefined.
-    if (data.priority == undefined) {
+    // Set priority and status if they are not specified.
+    if (!data.priority) {
         data.priority = 'NOT_ASSIGNED';
     }
-    if (data.status == undefined) {
+    if (!data.status) {
         data.status = 'OPEN';
     }
 
@@ -57,11 +57,41 @@ router.get('/:ticketId/technicians', (req, res, next) => {
 /** Set the status of a ticket. Some status changes require a message explaining the reason of the change -- this message should be included in the request body. Each status change automatically adds an Update to the ticket. */
 router.put('/:ticketId/status/:status', (req, res, next) => {
     Ticket.findById(req.params.ticketId, (err, ticket) => {
+
         if (!hasPermissionToEditTicket(req.user, ticket)) {
             return res.status(403).send("You do not have permission to access this endpoint.");
         }
-        // TODO Add error checking.
-        ticket.status = req.params.status;
+
+        // Status changes require a description.
+        const description = req.body.description;
+        if (!description && description !== 0) {
+            return res.status(400).send("Description of the status change is required.");
+        }
+
+        // Check if the status was actually changed.
+        const newStatus = req.params.status;
+        if (newStatus == ticket.status) {
+            return res.status(400).send(`Status was already ${newStatus}.`);
+        }
+
+        // TODO Check if the new status is a valid status.
+        ticket.status = newStatus;
+
+        const now = new Date();
+        ticket.lastUpdated = now;
+
+        // Create a new update to document the status change and add it to the ticket.
+        if (!ticket.updates) {
+            ticket.updates = [];
+        }
+        ticket.updates.push({
+            updateDetails: `Status changed to ${newStatus}. Reason: ${description}`,
+            modifiedDate: now,
+            modifiedBy: {
+                _id: req.user._id
+            }
+        });
+
         ticket.save((err, ticket) => res.send(ticket));
     });
 });
