@@ -4,8 +4,27 @@ const authentication = require('../authentication/authentication');
 const express = require('express');
 const router = express.Router();
 
+/**
+ * Helper method for determining whether the user has permissions to edit the ticket in general.
+ * Non-admins can only edit tickets that belong to their unit.
+ */
+const hasPermissionToEditTicket = (requestor, ticket) => {
+    return requestor.position == 'SYS_ADMIN' || (requestor.unit._id || requestor.unit) == ticket.unit;
+};
+
+/**
+ * Helper method for determining whether the user has permissions to change the technician assignment of a ticket.
+ * Non-admins can only change technician assignments of tickets that belong to their unit.
+ * Technicians can only change the assignments of themselves.
+ */
+const hasPermissionToChangeAssignment = (requestor, ticket, assigneeId) => {
+    return requestor.position == 'SYS_ADMIN'
+        || ((requestor.unit._id || requestor.unit) == ticket.unit
+            && (requestor.position != 'TECHNICIAN' || requestor._id == assigneeId));
+};
+
 /** Create a new ticket. */
-router.post('/:', (req, res, next) => {
+router.post('/', (req, res, next) => {
     // TODO Implement this.
 });
 
