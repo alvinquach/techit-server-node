@@ -74,6 +74,7 @@ router.put('/:ticketId/priority/:priority', (req, res, next) => {
         }
         // TODO Add error checking.
         ticket.priority = req.params.priority;
+        ticket.lastUpdated = new Date();
         ticket.save((err, ticket) => res.send(ticket));
     });
 });
