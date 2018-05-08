@@ -13,6 +13,11 @@ const hasPermissionToEditTicket = (requestor, ticket) => {
     return requestor.position == 'SYS_ADMIN' || (requestor.unit._id || requestor.unit) == ticket.unit;
 };
 
+/** Helper function for sending 404 error if the ticket doesnt exist. */
+const ticketDoesNotExist = (res, ticketId) => {
+    res.status(404).send(`Ticket '${ticketId}' could not be found.`);
+};
+
 /** Create a new ticket. */
 router.post('/', (req, res, next) => {
 
@@ -44,19 +49,28 @@ router.post('/', (req, res, next) => {
 
 /** Get the technicians assigned to a ticket. */
 router.get('/:ticketId/technicians', (req, res, next) => {
-    Ticket.findById(req.params.ticketId)
+    const ticketId = req.params.ticketId;
+    Ticket.findById(ticketId)
         .populate({
             path: 'technicians',
             select: 'firstName lastName'
         })
         .exec((err, ticket) => {
+            if (!ticket) {
+                return ticketDoesNotExist(res, ticketId);
+            }
             res.send(ticket.technicians);
         });
 });
 
 /** Set the status of a ticket. Some status changes require a message explaining the reason of the change -- this message should be included in the request body. Each status change automatically adds an Update to the ticket. */
 router.put('/:ticketId/status/:status', (req, res, next) => {
+    const ticketId = req.params.ticketId;
     Ticket.findById(req.params.ticketId, (err, ticket) => {
+
+        if (!ticket) {
+            return ticketDoesNotExist(res, ticketId);
+        }
 
         if (!hasPermissionToEditTicket(req.user, ticket)) {
             return res.status(403).send("You do not have permission to access this endpoint.");
@@ -98,7 +112,11 @@ router.put('/:ticketId/status/:status', (req, res, next) => {
 
 /** Set the priority of a ticket. */
 router.put('/:ticketId/priority/:priority', (req, res, next) => {
+    const ticketId = req.params.ticketId;
     Ticket.findById(req.params.ticketId, (err, ticket) => {
+        if (!ticket) {
+            return ticketDoesNotExist(res, ticketId);
+        }
         if (!hasPermissionToEditTicket(req.user, ticket)) {
             return res.status(403).send("You do not have permission to access this endpoint.");
         }
