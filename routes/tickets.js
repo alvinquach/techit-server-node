@@ -38,7 +38,7 @@ router.post('/', (req, res, next) => {
     data.createdDate = new Date();
 
     // Save and send the new ticket data back to the client.
-    new Ticket(data.save((err, ticket) => res.send(ticket)));
+    new Ticket(data).save((err, ticket) => res.send(ticket));
 
 });
 
