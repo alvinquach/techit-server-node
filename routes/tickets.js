@@ -9,27 +9,20 @@ const router = express.Router();
  * Non-admins can only edit tickets that belong to their unit.
  */
 const hasPermissionToEditTicket = (requestor, ticket) => {
+    console.log(requestor)
     return requestor.position == 'SYS_ADMIN' || (requestor.unit._id || requestor.unit) == ticket.unit;
 };
 
-/**
- * Helper method for determining whether the user has permissions to change the technician assignment of a ticket.
- * Non-admins can only change technician assignments of tickets that belong to their unit.
- * Technicians can only change the assignments of themselves.
- */
-const hasPermissionToChangeAssignment = (requestor, ticket, assigneeId) => {
-    return requestor.position == 'SYS_ADMIN'
-        || ((requestor.unit._id || requestor.unit) == ticket.unit
-            && (requestor.position != 'TECHNICIAN' || requestor._id == assigneeId));
-};
-
 /** Create a new ticket. */
-router.post('/', (req,res, next)=>{
-    const newTicket = new Ticket(res.body);  
-    newTicket.save(err => {  
-        return res.status(200).send(newTicket);
-    });
+router.post('/', (req, res, next)=>{
+    const newTicket = new Ticket(req.body);
+    newTicket.createdBy = {
+        _id: req.user._id
+    }
+    newTicket.createdDate = new Date();
+    newTicket.save((err, ticket) => res.send(ticket));
 });
+
 /** Get the technicians assigned to a ticket. */
 router.get('/:ticketId/technicians', (req, res, next) => {
     Ticket.findById(req.params.ticketId)
@@ -45,14 +38,25 @@ router.get('/:ticketId/technicians', (req, res, next) => {
 /** Set the status of a ticket. Some status changes require a message explaining the reason of the change -- this message should be included in the request body. Each status change automatically adds an Update to the ticket. */
 router.put('/:ticketId/status/:status', (req, res, next) => {
     Ticket.findById(req.params.ticketId, (err, ticket) => {
-
+        if (!hasPermissionToEditTicket(req.user, ticket)) {
+            return res.status(403).send("You do not have permission to access this endpoint.");
+        }
+        // TODO Add error checking.
+        ticket.status = req.params.status;
+        ticket.save((err, ticket) => res.send(ticket));
     });
-        
 });
 
 /** Set the priority of a ticket. */
 router.put('/:ticketId/priority/:priority', (req, res, next) => {
-    // TODO Implement this.
+    Ticket.findById(req.params.ticketId, (err, ticket) => {
+        if (!hasPermissionToEditTicket(req.user, ticket)) {
+            return res.status(403).send("You do not have permission to access this endpoint.");
+        }
+        // TODO Add error checking.
+        ticket.priority = req.params.priority;
+        ticket.save((err, ticket) => res.send(ticket));
+    });
 });
 
 module.exports = router;
