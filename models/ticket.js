@@ -35,8 +35,7 @@ const ticketSchema = mongoose.Schema({
     },
     unit: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Unit',
-        required: true
+        ref: 'Unit'
     },
     technicians: [{
         type: mongoose.Schema.Types.ObjectId,

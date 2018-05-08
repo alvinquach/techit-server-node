@@ -14,13 +14,32 @@ const hasPermissionToEditTicket = (requestor, ticket) => {
 };
 
 /** Create a new ticket. */
-router.post('/', (req, res, next)=>{
-    const newTicket = new Ticket(req.body);
-    newTicket.createdBy = {
+router.post('/', (req, res, next) => {
+
+    const data = req.body;
+
+    // Subject must be provided.
+    if (data.subject == undefined) {
+        return res.status(400).send("Subject is required.");
+    }
+
+    // Set priority and status if they are null or undefined.
+    if (data.priority == undefined) {
+        data.priority = 'NOT_ASSIGNED';
+    }
+    if (data.status == undefined) {
+        data.status = 'OPEN';
+    }
+
+    // Auto populate fields
+    data.createdBy = {
         _id: req.user._id
     }
-    newTicket.createdDate = new Date();
-    newTicket.save((err, ticket) => res.send(ticket));
+    data.createdDate = new Date();
+
+    // Save and send the new ticket data back to the client.
+    new Ticket(data.save((err, ticket) => res.send(ticket)));
+
 });
 
 /** Get the technicians assigned to a ticket. */
