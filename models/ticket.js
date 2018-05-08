@@ -5,27 +5,53 @@ require('./unit');
 
 const ticketSchema = mongoose.Schema({
     completionDetails: String,
-    createdDate: Date,
     details: String,
-    endDate: Date,
-    lastUpdated: Date,
     location: String,
     priority: {
         type: String,
-        enum: ['NOT_ASSIGNED','LOW','MEDIUM','HIGH'] // 0,1,2,3
+        enum: ['NOT_ASSIGNED','LOW','MEDIUM','HIGH'],
+        required: true
+    },
+    createdDate: {
+        type: Date,
+        required: true
     },
     startDate: Date,
+    endDate: Date,
+    lastUpdated: Date,
     status: {
         type: String,
-        enum: ['OPEN','IN_PROGRESS','ON_HOLD','COMPLETED','CLOSED'] // 0,1,2,3,4
+        enum: ['OPEN','IN_PROGRESS','ON_HOLD','COMPLETED','CLOSED'],
+        required: true
     },
-    subject: String,
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    unit: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
-    technicians: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    subject: {
+        type: String,
+        required: true
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    unit: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Unit',
+        required: true
+    },
+    technicians: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     updates: [{
-        modifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-        modifiedDate: Date,
+        modifiedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
+        modifiedDate: {
+            type: Date,
+            required: true
+        },
         updateDetails: String
     }]
 }, { collection: 'tickets' });

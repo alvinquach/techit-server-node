@@ -64,3 +64,5 @@ typings/
 mongo_data/
 
 mongo\.bat
+
+mongod\.bat

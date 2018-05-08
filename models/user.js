@@ -4,18 +4,37 @@ require('./unit');
 let userSchema = mongoose.Schema({
   department: String,
   email: String,
-  enabled: Boolean,
-  firstName: String,
-  hash: String,
-  lastName: String,
   phoneNumber: String,
+  enabled: {
+    type: Boolean,
+    required: true
+  },
+  firstName: {
+    type: String,
+    required: true
+  },
+  hash: {
+    type: String,
+    required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
   position: {
     type: String,
-    enum: ['SYS_ADMIN','SUPERVISING_TECHNICIAN','TECHNICIAN','USER']
+    enum: ['SYS_ADMIN','SUPERVISING_TECHNICIAN','TECHNICIAN','USER'],
+    required: true
   },
-  username: String,
-  unit: { type: mongoose.Schema.Types.ObjectId, ref: 'Unit' },
-  email: String
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  unit: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Unit'
+  },
 }, { collection: 'users' });
  
 let User = mongoose.model('User', userSchema);
