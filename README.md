@@ -8,3 +8,7 @@ a REST API and a SPA frontend.
 
 This repository hosts the backend implemented in Node.js with Express and MongoDB.
 
+
+
+db.addUser('admin-csula', 'password')
+
