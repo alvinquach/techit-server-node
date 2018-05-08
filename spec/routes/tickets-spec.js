@@ -53,7 +53,7 @@ describe('Tickets API Tests:', () => {
             });
         });
 
-        it("Status 401 expected", (done) => {
+        it("Status 400 expected due to missing subject", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {
@@ -64,7 +64,6 @@ describe('Tickets API Tests:', () => {
 
                 const ticket = {
                     priority: 'MEDIUM',
-                    subject: 'asdf',
                     details: 'abcd',
                     location: 'Mars',
                     unit: '5aefc78a513d8023e4f53666'
@@ -72,9 +71,12 @@ describe('Tickets API Tests:', () => {
 
                 ticketsApi.post({
                     url: '/',
+                    headers: {
+                        'Authorization': body
+                    },
                     body: ticket
                 }, (err, res, body) => {
-                    expect(res.statusCode).toBe(401);
+                    expect(res.statusCode).toBe(400);
                     done();
                 });
             });
@@ -106,7 +108,7 @@ describe('Tickets API Tests:', () => {
             });
         });
 
-        it("Status 401 expected", (done) => {
+        it("Status 404 expected due to invalid ticket ID", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {
@@ -115,9 +117,12 @@ describe('Tickets API Tests:', () => {
                 }
             }, (err, res, body) => {
                 ticketsApi.get({
-                    url: `/${ticketId}/technicians`
+                    url: '/invalid_ticket_id/technicians',
+                    headers: {
+                        'Authorization': body
+                    }
                 }, (err, res, body) => {
-                    expect(res.statusCode).toBe(401);
+                    expect(res.statusCode).toBe(404);
                     done();
                 });
             });
