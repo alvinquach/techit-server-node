@@ -18,6 +18,27 @@ const ticketDoesNotExist = (res, ticketId) => {
     res.status(404).send(`Ticket '${ticketId}' could not be found.`);
 };
 
+/** Get existing ticket. */
+router.get('/:ticketId', (req, res, next) => {
+
+    // Specific permissions were not implemented for this endpoint
+    // because this endpoint was not a requirement.
+
+    const ticketId = req.params.ticketId;
+    Ticket.findById(ticketId)
+        .populate({
+            path: 'technicians',
+            select: 'firstName lastName'
+        })
+        .populate('unit')
+        .exec((err, ticket) => {
+            if (!ticket) {
+                return ticketDoesNotExist(res, ticketId);
+            }
+            res.send(ticket);
+        });
+});
+
 /** Create a new ticket. */
 router.post('/', async (req, res, next) => {
 
