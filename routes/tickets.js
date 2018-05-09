@@ -19,13 +19,21 @@ const ticketDoesNotExist = (res, ticketId) => {
 };
 
 /** Create a new ticket. */
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
 
     const data = req.body;
 
     // Subject must be provided.
     if (data.subject == undefined) {
         return res.status(400).send("Subject is required.");
+    }
+
+    // If there is an id provided, check if a ticket with the same id already exists.
+    if (data._id) {
+        const existing = await Ticket.findById(data.id).exec();
+        if (existing) {
+            return res.status(400).send(`Ticket '${data._id}' already exists.`);
+        }
     }
 
     // Set priority and status if they are not specified.
@@ -39,7 +47,7 @@ router.post('/', (req, res, next) => {
     // Auto populate fields
     data.createdBy = {
         _id: req.user._id
-    }
+    };
     data.createdDate = new Date();
 
     // Save and send the new ticket data back to the client.
