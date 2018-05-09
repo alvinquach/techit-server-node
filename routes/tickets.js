@@ -18,14 +18,43 @@ const ticketDoesNotExist = (res, ticketId) => {
     res.status(404).send(`Ticket '${ticketId}' could not be found.`);
 };
 
+/** Get existing ticket. */
+router.get('/:ticketId', (req, res, next) => {
+
+    // Specific permissions were not implemented for this endpoint
+    // because this endpoint was not a requirement.
+
+    const ticketId = req.params.ticketId;
+    Ticket.findById(ticketId)
+        .populate({
+            path: 'technicians',
+            select: 'firstName lastName'
+        })
+        .populate('unit')
+        .exec((err, ticket) => {
+            if (!ticket) {
+                return ticketDoesNotExist(res, ticketId);
+            }
+            res.send(ticket);
+        });
+});
+
 /** Create a new ticket. */
-router.post('/', (req, res, next) => {
+router.post('/', async (req, res, next) => {
 
     const data = req.body;
 
     // Subject must be provided.
     if (data.subject == undefined) {
         return res.status(400).send("Subject is required.");
+    }
+
+    // If there is an id provided, check if a ticket with the same id already exists.
+    if (data._id) {
+        const existing = await Ticket.findById(data.id).exec();
+        if (existing) {
+            return res.status(400).send(`Ticket '${data._id}' already exists.`);
+        }
     }
 
     // Set priority and status if they are not specified.
@@ -39,7 +68,7 @@ router.post('/', (req, res, next) => {
     // Auto populate fields
     data.createdBy = {
         _id: req.user._id
-    }
+    };
     data.createdDate = new Date();
 
     // Save and send the new ticket data back to the client.
