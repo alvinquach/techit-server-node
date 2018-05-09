@@ -24,7 +24,7 @@ describe('Login API Tests:', () => {
             });
         });
 
-        it("Status 401 expected", (done) => {
+        it("Status 401 expected due to wrong password", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {

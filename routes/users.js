@@ -4,6 +4,11 @@ const authentication = require('../authentication/authentication');
 const express = require('express');
 const router = express.Router();
 
+/** Helper function for sending 404 error if the user doesnt exist. */
+const userDoesNotExist = (res, userId) => {
+    res.status(404).send(`User '${userId}' could not be found.`);
+};
+
 /* GET users listing. */
 router.get('/', authentication.authenticatePosition('SYS_ADMIN'), (req, res, next) => {
     User.find({}, "-hash")
@@ -19,9 +24,13 @@ router.get('/:userId', (req, res, next) => {
     // Specific permissions were not implemented for this endpoint
     // because this endpoint was not a requirement.
 
-    User.findById(req.params.userId, "-hash")
+    const userId = req.params.userId;
+    User.findById(userId, "-hash")
         .populate('unit')
         .exec((err, user) => {
+            if (!user) {
+                return userDoesNotExist(res, userId);
+            }
             res.send(user);
         });
 });

@@ -12,6 +12,33 @@ const loginApi = request.defaults({
 
 describe('Tickets API Tests:', () => {
 
+    const testTicketId = '5aefc78a513d8023e4f53670';
+    let testTicketStatus;
+    let testTicketPriority;
+
+    // Find out the current status and priority of the test ticket.
+    beforeAll((done) => {
+        loginApi.post({
+            url: '/',
+            qs: {
+                username: 'techit',
+                password: 'abcd'
+            }
+        }, (err, res, body) => {
+            ticketsApi.get({
+                url: `/${testTicketId}`,
+                headers: {
+                    'Authorization': body
+                }
+            }, (err, res, body) => {
+                expect(res.statusCode).toBe(200);
+                testTicketStatus = body.status;
+                testTicketPriority = body.priority;
+                done();
+            });
+        });
+    });
+
     // Create new ticket
     describe("POST / :", () => {
 
@@ -50,7 +77,7 @@ describe('Tickets API Tests:', () => {
             });
         });
 
-        it("Status 401 expected", (done) => {
+        it("Status 400 expected due to missing subject", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {
@@ -61,7 +88,6 @@ describe('Tickets API Tests:', () => {
 
                 const ticket = {
                     priority: 'MEDIUM',
-                    subject: 'asdf',
                     details: 'abcd',
                     location: 'Mars',
                     unit: '5aefc78a513d8023e4f53666'
@@ -69,9 +95,12 @@ describe('Tickets API Tests:', () => {
 
                 ticketsApi.post({
                     url: '/',
+                    headers: {
+                        'Authorization': body
+                    },
                     body: ticket
                 }, (err, res, body) => {
-                    expect(res.statusCode).toBe(401);
+                    expect(res.statusCode).toBe(400);
                     done();
                 });
             });
@@ -80,8 +109,6 @@ describe('Tickets API Tests:', () => {
 
     // Get the technicians assigned to a ticket.
     describe("GET /:ticketId/technicians :", () => {
-
-        const ticketId = '5aefc78a513d8023e4f53670';
 
         it("Status 200 expected", (done) => {
             loginApi.post({
@@ -92,7 +119,7 @@ describe('Tickets API Tests:', () => {
                 }
             }, (err, res, body) => {
                 ticketsApi.get({
-                    url: `/${ticketId}/technicians`,
+                    url: `/${testTicketId}/technicians`,
                     headers: {
                         'Authorization': body
                     }
@@ -103,7 +130,7 @@ describe('Tickets API Tests:', () => {
             });
         });
 
-        it("Status 401 expected", (done) => {
+        it("Status 404 expected due to invalid ticket ID", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {
@@ -112,9 +139,12 @@ describe('Tickets API Tests:', () => {
                 }
             }, (err, res, body) => {
                 ticketsApi.get({
-                    url: `/${ticketId}/technicians`
+                    url: '/invalid_ticket_id/technicians',
+                    headers: {
+                        'Authorization': body
+                    }
                 }, (err, res, body) => {
-                    expect(res.statusCode).toBe(401);
+                    expect(res.statusCode).toBe(404);
                     done();
                 });
             });
@@ -125,9 +155,6 @@ describe('Tickets API Tests:', () => {
     // Set the status of a ticket. 
     describe("PUT //:ticketId/status/:status :", () => {
 
-        const ticketId = '5aefc78a513d8023e4f53670';
-        const status = 'OPEN';
-
         it("Status 200 expected", (done) => {
             loginApi.post({
                 url: '/',
@@ -136,34 +163,40 @@ describe('Tickets API Tests:', () => {
                     password: 'abcd'
                 }
             }, (err, res, body) => {
+
+                const newStatus = testTicketStatus == 'OPEN' ? 'IN_PROGRESS' : 'OPEN';
+
                 ticketsApi.put({
-                    url: `/${ticketId}/status/${status}`,
+                    url: `/${testTicketId}/status/${newStatus}`,
                     headers: {
                         'Authorization': body
+                    },
+                    body: {
+                        description: "For testing."
                     }
                 }, (err, res, body) => {
                     expect(res.statusCode).toBe(200);
-                    expect(body.status).toBe(status);
+                    expect(body.status).toBe(newStatus);
                     done();
                 });
             });
         });
 
-        it("Status 403 expected", (done) => {
+        it("Status 400 expected due to missing description", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {
-                    username: 'jcota',
+                    username: 'techit',
                     password: 'abcd'
                 }
             }, (err, res, body) => {
                 ticketsApi.put({
-                    url: `/${ticketId}/status/${status}`,
+                    url: `/${testTicketId}/status/${testTicketStatus}`,
                     headers: {
                         'Authorization': body
                     }
                 }, (err, res, body) => {
-                    expect(res.statusCode).toBe(403);
+                    expect(res.statusCode).toBe(400);
                     done();
                 });
             });
@@ -174,9 +207,6 @@ describe('Tickets API Tests:', () => {
     // Set the priority of a ticket. 
     describe("PUT //:ticketId/priority/:priority :", () => {
 
-        const ticketId = '5aefc78a513d8023e4f53670';
-        const priority = 'LOW';
-
         it("Status 200 expected", (done) => {
             loginApi.post({
                 url: '/',
@@ -185,20 +215,23 @@ describe('Tickets API Tests:', () => {
                     password: 'abcd'
                 }
             }, (err, res, body) => {
+
+                const newPriority = testTicketPriority == 'NOT_ASSIGNED' ? 'LOW' : 'NOT_ASSIGNED';
+
                 ticketsApi.put({
-                    url: `/${ticketId}/priority/${priority}`,
+                    url: `/${testTicketId}/priority/${newPriority}`,
                     headers: {
                         'Authorization': body
                     }
                 }, (err, res, body) => {
                     expect(res.statusCode).toBe(200);
-                    expect(body.priority).toBe(priority);
+                    expect(body.priority).toBe(newPriority);
                     done();
                 });
             });
         });
 
-        it("Status 403 expected", (done) => {
+        it("Status 403 expected due to insufficient permissions", (done) => {
             loginApi.post({
                 url: '/',
                 qs: {
@@ -207,7 +240,7 @@ describe('Tickets API Tests:', () => {
                 }
             }, (err, res, body) => {
                 ticketsApi.put({
-                    url: `/${ticketId}/priority/${priority}`,
+                    url: `/${testTicketId}/priority/${testTicketPriority}`,
                     headers: {
                         'Authorization': body
                     }
