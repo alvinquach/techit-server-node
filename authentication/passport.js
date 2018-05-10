@@ -15,6 +15,7 @@ const config = (passport) => {
         const user = {
             _id: payload.id,
             username: payload.username,
+            email: payload.email,
             position: payload.position
         };
         if (payload.unitId) {
