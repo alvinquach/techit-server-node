@@ -25,7 +25,15 @@ const config = (passport) => {
 };
 
 const authenticate = (passport) => {
-    return passport.authenticate('jwt', { session: false });
+    return (res, req, next) => {
+        if (res.method == 'OPTIONS') {
+            // Skip check on OPTIONS requests.
+            next();
+        }
+        else {
+            passport.authenticate('jwt', { session: false })(res, req, next);
+        }
+    };
 };
 
 module.exports = {
