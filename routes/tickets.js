@@ -119,6 +119,9 @@ router.put('/:ticketId/status/:status', (req, res, next) => {
 
         // TODO Check if the new status is a valid status.
         ticket.status = newStatus;
+        if (newStatus == "COMPLETED") {
+            ticket.completionDetails = description;
+        }
 
         const now = new Date();
         ticket.lastUpdated = now;
@@ -152,6 +155,33 @@ router.put('/:ticketId/priority/:priority', (req, res, next) => {
         // TODO Add error checking.
         ticket.priority = req.params.priority;
         ticket.lastUpdated = new Date();
+        ticket.save((err, ticket) => res.send(ticket));
+    });
+});
+
+/** Add an update to a ticket */
+router.post('/:ticketId/update', (req, res, next) => {
+    const ticketId = req.params.ticketId;
+    Ticket.findById(req.params.ticketId, (err, ticket) => {
+        if (!ticket) {
+            return ticketDoesNotExist(res, ticketId);
+        }
+        if (!hasPermissionToEditTicket(req.user, ticket)) {
+            return res.status(403).send("You do not have permission to access this endpoint.");
+        }
+        const updateDetails = req.body.updateDetails;
+        if (updateDetails == undefined) {
+            return res.status(400).send("Update details is required.");
+        }
+        const now = new Date();
+        ticket.updates.push({
+            updateDetails: updateDetails,
+            modifiedBy: {
+                _id: req.user._id
+            },
+            modifiedDate: now
+        });
+        ticket.lastUpdated = now;
         ticket.save((err, ticket) => res.send(ticket));
     });
 });
