@@ -37,10 +37,11 @@ app.use((req, res, next) => {
     next();
 });
 
+const apiPath = '/api';
 app.use('/', indexRouter);
-app.use('/login', loginRouter);
-app.use('/users', authentication.authenticateToken(passport), usersRouter);
-app.use('/units', authentication.authenticateToken(passport), unitsRouter);
-app.use('/tickets', authentication.authenticateToken(passport), ticketsRouter);
+app.use(`${apiPath}/login`, loginRouter);
+app.use(`${apiPath}/users`, authentication.authenticateToken(passport), usersRouter);
+app.use(`${apiPath}/units`, authentication.authenticateToken(passport), unitsRouter);
+app.use(`${apiPath}/tickets`, authentication.authenticateToken(passport), ticketsRouter);
  
 module.exports = app;
