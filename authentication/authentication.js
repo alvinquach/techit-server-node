@@ -27,6 +27,7 @@ const authenticatePosition = (positions) => {
         if (positions.indexOf(req.user.position) == -1) {
             return sendForbidden(res);
         }
+        //what next is doing?
         next();
     }
 }

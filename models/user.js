@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 require('./unit');
- 
 let userSchema = mongoose.Schema({
   department: String,
   email: String,
@@ -36,7 +35,7 @@ let userSchema = mongoose.Schema({
     ref: 'Unit'
   },
 }, { collection: 'users' });
- 
+userSchema.index({'$**': 'text'});
 let User = mongoose.model('User', userSchema);
 module.exports = User;
  

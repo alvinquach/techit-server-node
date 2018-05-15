@@ -12,10 +12,28 @@ const userDoesNotExist = (res, userId) => {
 /* GET users listing. */
 router.get('/', authentication.authenticatePosition('SYS_ADMIN'), (req, res, next) => {
     User.find({}, "-hash")
-        .populate('unit')
         .exec((err, users) => {
             res.send(users);
         });
+});
+
+/**Full text search for user */
+router.get('/search/:searchable/', (req, res, next) => {
+    
+    // For now only sys admin should be able to access this
+    if (req.user.position != 'SYS_ADMIN') {
+        return res.status(403).send("You do not have access to this endpoint.");
+    }
+    const searchable = req.params.searchable;
+    User.find({$text: {$search: searchable}}, "-hash")
+       .populate('unit')
+       .exec((err, user) => {
+        if (!user) {
+            return userDoesNotExist(res, searchable);
+        }
+        res.send(user);
+    });
+        
 });
 
 /** Get user by ID. */

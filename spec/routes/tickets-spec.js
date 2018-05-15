@@ -114,7 +114,7 @@ describe('Tickets API Tests:', () => {
             loginApi.post({
                 url: '/',
                 qs: {
-                    username: 'techit',
+                    username: ' techit',
                     password: 'abcd'
                 }
             }, (err, res, body) => {
