@@ -39,6 +39,8 @@ const generateJwt = async (username, password) => {
                 const payload = {
                     id: user._id,
                     username: user.username,
+                    name: `${user.firstName} ${user.lastName}`,
+                    email: user.email,
                     position: user.position,
                     unitId: user.unit
                 }

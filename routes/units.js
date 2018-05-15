@@ -5,6 +5,13 @@ const authentication = require('../authentication/authentication');
 const express = require('express');
 const router = express.Router();
 
+/** Get list of units. */
+router.get('/', (req, res, next) => {
+    Unit.find({}, (err, units) => {
+        res.send(units);
+    });
+});
+
 /** Get the technicians of a unit. */
 router.get('/:unitId/technicians', authentication.authenticatePosition('SYS_ADMIN'), (req, res, next) => {
     const query = {

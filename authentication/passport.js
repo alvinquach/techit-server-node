@@ -15,6 +15,7 @@ const config = (passport) => {
         const user = {
             _id: payload.id,
             username: payload.username,
+            email: payload.email,
             position: payload.position
         };
         if (payload.unitId) {
@@ -25,7 +26,15 @@ const config = (passport) => {
 };
 
 const authenticate = (passport) => {
-    return passport.authenticate('jwt', { session: false });
+    return (res, req, next) => {
+        if (res.method == 'OPTIONS') {
+            // Skip check on OPTIONS requests.
+            next();
+        }
+        else {
+            passport.authenticate('jwt', { session: false })(res, req, next);
+        }
+    };
 };
 
 module.exports = {

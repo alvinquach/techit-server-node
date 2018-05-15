@@ -121,45 +121,51 @@ router.get('/:ticketId/technicians', (req, res, next) => {
 
 /** Set the status of a ticket. Some status changes require a message explaining the reason of the change -- this message should be included in the request body. Each status change automatically adds an Update to the ticket. */
 router.put('/:ticketId/status/:status', (req, res, next) => {
-  const ticketId = req.params.ticketId;
-  Ticket.findById(req.params.ticketId, (err, ticket) => {
+    const ticketId = req.params.ticketId;
+    Ticket.findById(req.params.ticketId, (err, ticket) => {
 
-    if (!ticket) {
-      return ticketDoesNotExist(res, ticketId);
-    }
+        if (!ticket) {
+            return ticketDoesNotExist(res, ticketId);
+        }
 
-    if (!hasPermissionToEditTicket(req.user, ticket)) {
-      return res.status(403).send("You do not have permission to access this endpoint.");
-    }
+        if (!hasPermissionToEditTicket(req.user, ticket)) {
+            return res.status(403).send("You do not have permission to access this endpoint.");
+        }
 
-    // Status changes require a description.
-    const description = req.body.description;
-    if (!description && description !== 0) {
-      return res.status(400).send("Description of the status change is required.");
-    }
+        // Status changes require a description.
+        const description = req.body.description;
+        if (!description && description !== 0) {
+            return res.status(400).send("Description of the status change is required.");
+        }
 
-    // Check if the status was actually changed.
-    const newStatus = req.params.status;
-    if (newStatus == ticket.status) {
-      return res.status(400).send(`Status was already ${newStatus}.`);
-    }
+        // Check if the status was actually changed.
+        const newStatus = req.params.status;
+        if (newStatus == ticket.status) {
+            return res.status(400).send(`Status was already ${newStatus}.`);
+        }
 
-    // TODO Check if the new status is a valid status.
-    ticket.status = newStatus;
+        // TODO Check if the new status is a valid status.
+        ticket.status = newStatus;
+        if (newStatus == "COMPLETED") {
+            ticket.completionDetails = description;
+        }
 
-    const now = new Date();
-    ticket.lastUpdated = now;
+        const now = new Date();
+        ticket.lastUpdated = now;
 
-    // Create a new update to document the status change and add it to the ticket.
-    if (!ticket.updates) {
-      ticket.updates = [];
-    }
-    ticket.updates.push({
-      updateDetails: `Status changed to ${newStatus}. Reason: ${description}`,
-      modifiedDate: now,
-      modifiedBy: {
-        _id: req.user._id
-      }
+        // Create a new update to document the status change and add it to the ticket.
+        if (!ticket.updates) {
+            ticket.updates = [];
+        }
+        ticket.updates.push({
+            updateDetails: `Status changed to ${newStatus}. Reason: ${description}`,
+            modifiedDate: now,
+            modifiedBy: {
+                _id: req.user._id
+            }
+        });
+
+        ticket.save((err, ticket) => res.send(ticket));
     });
 
     ticket.save((err, ticket) => res.send(ticket));
@@ -181,6 +187,33 @@ router.put('/:ticketId/priority/:priority', (req, res, next) => {
     ticket.lastUpdated = new Date();
     ticket.save((err, ticket) => res.send(ticket));
   });
+});
+
+/** Add an update to a ticket */
+router.post('/:ticketId/update', (req, res, next) => {
+    const ticketId = req.params.ticketId;
+    Ticket.findById(req.params.ticketId, (err, ticket) => {
+        if (!ticket) {
+            return ticketDoesNotExist(res, ticketId);
+        }
+        if (!hasPermissionToEditTicket(req.user, ticket)) {
+            return res.status(403).send("You do not have permission to access this endpoint.");
+        }
+        const updateDetails = req.body.updateDetails;
+        if (updateDetails == undefined) {
+            return res.status(400).send("Update details is required.");
+        }
+        const now = new Date();
+        ticket.updates.push({
+            updateDetails: updateDetails,
+            modifiedBy: {
+                _id: req.user._id
+            },
+            modifiedDate: now
+        });
+        ticket.lastUpdated = now;
+        ticket.save((err, ticket) => res.send(ticket));
+    });
 });
 
 module.exports = router;
