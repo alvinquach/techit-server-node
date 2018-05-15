@@ -67,7 +67,6 @@ router.get('/search/:searchable/', (req, res, next) => {
 });
 
 /** Create a new ticket. */
-//why async?
 router.post('/', async (req, res, next) => {
 
   const data = req.body;
