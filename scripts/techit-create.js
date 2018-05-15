@@ -9,12 +9,12 @@ const units = [
     {
         // id: 1,
         _id: '5aefc78a513d8023e4f53666',
-        name: 'cs'
+        name: 'Unit 1'
     },
     {
         // id: 2,
         _id: '5aefc78a513d8023e4f53667',
-        name: 'me'
+        name: 'Unit 2'
     }
 ];
 

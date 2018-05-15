@@ -2,7 +2,7 @@ const request = require('request');
 const authentication = require('../../authentication/authentication');
 
 const loginApi = request.defaults({
-    baseUrl: 'http://localhost:3000/login',
+    baseUrl: 'http://localhost:3000/api/login',
     json: true
 });
 

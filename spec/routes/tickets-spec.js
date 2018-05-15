@@ -1,12 +1,12 @@
 const request = require('request');
 
 const ticketsApi = request.defaults({
-    baseUrl: 'http://localhost:3000/tickets',
+    baseUrl: 'http://localhost:3000/api/tickets',
     json: true
 });
 
 const loginApi = request.defaults({
-    baseUrl: 'http://localhost:3000/login',
+    baseUrl: 'http://localhost:3000/api/login',
     json: true
 });
 
@@ -114,7 +114,7 @@ describe('Tickets API Tests:', () => {
             loginApi.post({
                 url: '/',
                 qs: {
-                    username: ' techit',
+                    username: 'techit',
                     password: 'abcd'
                 }
             }, (err, res, body) => {
