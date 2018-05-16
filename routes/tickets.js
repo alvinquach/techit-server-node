@@ -29,6 +29,11 @@ router.get('/:ticketId', (req, res, next) => {
     .populate({
       path: 'technicians',
       select: 'firstName lastName'
+
+    })
+    .populate({
+      path: 'createdBy',
+      select: 'firstName lastName'
     })
     .populate('unit')
     .exec((err, ticket) => {
@@ -170,7 +175,7 @@ router.put('/:ticketId/status/:status', (req, res, next) => {
 
     ticket.save((err, ticket) => res.send(ticket));
   });
-});
+
 
 /** Set the priority of a ticket. */
 router.put('/:ticketId/priority/:priority', (req, res, next) => {
