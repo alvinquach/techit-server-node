@@ -21,28 +21,30 @@ const ticketDoesNotExist = (res, ticketId) => {
 /** Get existing ticket. */
 router.get('/:ticketId', (req, res, next) => {
 
-  // Specific permissions were not implemented for this endpoint
-  // because this endpoint was not a requirement.
+	// Specific permissions were not implemented for this endpoint
+	// because this endpoint was not a requirement.
 
-
-  const ticketId = req.params.ticketId;
-  Ticket.findById(ticketId)
-    .populate({
-      path: 'technicians',
-      select: 'firstName lastName'
-
-    })
-    .populate({
-      path: 'createdBy',
-      select: 'firstName lastName'
-    })
-    .populate('unit')
-    .exec((err, ticket) => {
-      if (!ticket) {
-        return ticketDoesNotExist(res, ticketId);
-      }
-      res.send(ticket);
-    });
+	const ticketId = req.params.ticketId;
+	Ticket.findById(ticketId)
+		.populate({
+			path: 'technicians',
+			select: 'firstName lastName'
+		})
+		.populate({
+			path: 'createdBy',
+			select: 'firstName lastName'
+		})
+		.populate({
+			path: 'updates.modifiedBy',
+			select: 'firstName lastName'
+		})
+		.populate('unit')
+		.exec((err, ticket) => {
+			if (!ticket) {
+				return ticketDoesNotExist(res, ticketId);
+			}
+			res.send(ticket);
+		});
 });
 
 /**Full text search for ticket */
@@ -60,6 +62,10 @@ router.get('/search/:searchable/', (req, res, next) => {
 	})
 	.populate({
 		path: 'technicians',
+		select: 'firstName lastName'
+	})
+	.populate({
+		path: 'updates.modifiedBy',
 		select: 'firstName lastName'
 	})
 	.populate('unit')
@@ -218,7 +224,23 @@ router.post('/:ticketId/update', (req, res, next) => {
 			modifiedDate: now
 		});
 		ticket.lastUpdated = now;
-		ticket.save((err, ticket) => res.send(ticket));
+		ticket.save((err, ticket) => {
+			Ticket.populate(ticket, [
+				{
+					path: 'technicians',
+					select: 'firstName lastName'
+				},
+				{
+					path: 'createdBy',
+					select: 'firstName lastName'
+				},
+				{
+					path: 'updates.modifiedBy',
+					select: 'firstName lastName'
+				},
+				'unit'
+			], (err, ticket) => res.send(ticket));
+		});
 	});
 });
 

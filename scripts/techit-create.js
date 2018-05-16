@@ -116,6 +116,18 @@ const users = [
         phoneNumber: '444-444-44449',
         position: 'USER',
         enabled: true
+    },
+    {
+        username: 'cysun',
+        hash: '$2a$10$Xm5I2iYA/4vZytuGpVIro.zUAHGG0eAAcY2.aX20kRcM8u7AEmFom',
+        department: 'Computer Science',
+        unit: units[0]._id,
+        firstName: 'Chengyu',
+        lastName: 'Sun',
+        email: 'csun@techit.com',
+        phoneNumber: '123-456-7890',
+        position: 'SYS_ADMIN',
+        enabled: true
     }
 ];
 
@@ -264,10 +276,6 @@ const tickets = [
         technicians: [],
         updates: []
     }
-];
-
-const updates = [
-
 ];
 
 // Using Promise
