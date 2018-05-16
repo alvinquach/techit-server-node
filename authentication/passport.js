@@ -26,13 +26,13 @@ const config = (passport) => {
 };
 
 const authenticate = (passport) => {
-    return (res, req, next) => {
-        if (res.method == 'OPTIONS') {
+    return (req, res, next) => {
+        if (req.method == 'OPTIONS') {
             // Skip check on OPTIONS requests.
             next();
         }
         else {
-            passport.authenticate('jwt', { session: false })(res, req, next);
+            passport.authenticate('jwt', { session: false })(req, res, next);
         }
     };
 };
