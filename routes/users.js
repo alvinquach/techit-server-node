@@ -12,6 +12,7 @@ const userDoesNotExist = (res, userId) => {
 /* GET users listing. */
 router.get('/', authentication.authenticatePosition('SYS_ADMIN'), (req, res, next) => {
     User.find({}, "-hash")
+        .populate('unit')
         .exec((err, users) => {
             res.send(users);
         });

@@ -1,12 +1,12 @@
 const request = require('request');
 
 const unitsApi = request.defaults({
-    baseUrl: 'http://localhost:3000/units',
+    baseUrl: 'http://localhost:3000/api/units',
     json: true
 });
 
 const loginApi = request.defaults({
-    baseUrl: 'http://localhost:3000/login',
+    baseUrl: 'http://localhost:3000/api/login',
     json: true
 });
 
