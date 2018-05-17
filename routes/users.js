@@ -17,6 +17,28 @@ router.get('/', authentication.authenticatePosition('SYS_ADMIN'), (req, res, nex
         });
 });
 
+/**RegEx text search for user */
+router.get('/regsearch/:searchable/', (req, res, next) => {
+    
+    // For now only sys admin should be able to access this
+    if (req.user.position != 'SYS_ADMIN') {
+        return res.status(403).send("You do not have access to this endpoint.");
+    }
+    const searchable = req.params.searchable;
+    const reg={$regex: searchable}
+    console.log(reg)
+    User.find({username: {$regex: searchable}}, "-hash")
+       .populate('unit')
+       .exec((err, user) => {
+        if (!user) {
+            return userDoesNotExist(res, searchable);
+        }
+        res.send(user);
+    });
+        
+});
+
+
 /**Full text search for user */
 router.get('/search/:searchable/', (req, res, next) => {
     

@@ -8,7 +8,7 @@ const config = (passport) => {
         secretOrKey: process.env.JWT_SECRET
     };
 
-    passport.use(new JwtStrategy(opts, (payload, done) => {
+    passport.use(new JwtStrategy(opts, (payload, done) => { 
         if (!payload || !payload.id || !payload.position) {
             return done(null, false);
         }

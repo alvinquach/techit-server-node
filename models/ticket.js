@@ -54,6 +54,7 @@ const ticketSchema = mongoose.Schema({
         updateDetails: String
     }]
 }, { collection: 'tickets' });
+ticketSchema.index({'$**': 'text'});
 
 const Ticket = mongoose.model('Ticket', ticketSchema);
 module.exports = Ticket;
