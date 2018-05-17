@@ -179,8 +179,6 @@ router.put('/:ticketId/status/:status', (req, res, next) => {
 
         ticket.save((err, ticket) => res.send(ticket));
     });
-
-    ticket.save((err, ticket) => res.send(ticket));
   });
 
 
